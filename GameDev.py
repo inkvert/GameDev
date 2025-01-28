@@ -13,9 +13,12 @@ Some ideas to add:
 """
 
 import random
+import json
+import os
+from datetime import date
 
 # Program version and tagline
-VERSION = "V1"
+VERSION = "V1.1"
 
 def main():
 
