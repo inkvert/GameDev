@@ -109,6 +109,7 @@ def main():
                 current_player_health = current_player_health - damage_dealt
                 print(f"{monster_name} attacks {player_name}! {monster_name} deals {damage_dealt} damage to {player_name}!")
                 print(f"{player_name} has {current_player_health} health remaining!")
+                print(end='\n')
 
             def roll_item(dic):
                 # Roll a random number between defined weight range
