@@ -1,0 +1,24 @@
+{
+    "name": "s",
+    "level": 1,
+    "xp": 92,
+    "gold": 348,
+    "health": 91,
+    "base_damage": 10,
+    "regen": 84,
+    "equipped_items": {
+        "weapon": {
+            "name": "None",
+            "power": 0
+        },
+        "armour": {
+            "name": "Trusty Bronze Garb of the Dog",
+            "power": 13
+        },
+        "jewellery": {
+            "name": "None",
+            "power": 0
+        }
+    },
+    "inventory": []
+}

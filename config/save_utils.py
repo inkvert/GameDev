@@ -1,6 +1,7 @@
 from config.game_constants import SAVE_FILE
 import os
 import json
+import random
 
 
 def load_player():
