@@ -37,8 +37,8 @@ def attack(attacker, defender):
     """Handles an attack from one character to another."""
     damage = roll_damage(attacker["base_damage"])
     defender["health"] -= damage
-    print(f"{attacker['name']} attacks {defender['name']} and deals {damage} damage!")
-    print(f"{defender['name']} has {max(defender['health'], 0)} health remaining.\n")
+    print(f"{attacker['name']} attacks {defender['name']} and deals \033[31m{damage}\033[0m damage!")
+    print(f"{defender['name']} has \033[32m{max(defender['health'], 0)}\033[0m health remaining.\n")
     return defender["health"] <= 0  # Returns True if defender dies
 
 def fight_monster(player):
@@ -55,8 +55,8 @@ def fight_monster(player):
             player["gold"] += monster["gold_drop"]
             player["xp"] += monster["xp_reward"]
             player["health"] += player["regen"]
-            print(f"You gained {monster['gold_drop']} gold and {monster['xp_reward']} XP.")
-            print(f"{player['name']} regenerates {player['regen']} health.\n")
+            print(f"You gained \033[33m{monster['gold_drop']}\033[0m gold and \033[35m{monster['xp_reward']}\033[0m XP.")
+            print(f"{player['name']} regenerates \033[32m{player['regen']}\033[0m health.\n")
             item = generate_random_item()
             item_type = random.choice(["Weapon", "Armour", "Jewellery"])
             rolled_item = item[item_type]
@@ -158,7 +158,8 @@ def main():
         print("2. Check Player Stats")
         print("3. Check Inventory")
         print("4. Collect Daily Reward")
-        print("5. Exit Game")
+        print("5. Change Name")
+        print("6. Exit Game")
 
         choice = input("Choose an option: ")
 
@@ -171,6 +172,8 @@ def main():
         elif choice == "4":
             collect_daily_reward(player)
         elif choice == "5":
+            change_name(player)
+        elif choice == "6":
             save_utils.save_player(player)
             print("Game saved. Goodbye!")
             break
@@ -181,10 +184,10 @@ def show_stats(player):
     """Displays the player's stats."""
     print("\n=== Player Stats ===")
     print(f"Name: {player['name']}")
-    print(f"Health: {player['health']}")
-    print(f"Level: {player['level']}")
-    print(f"EXP: {player['xp']}")
-    print(f"Gold: {player['gold']}")
+    print(f"Health: \033[32m{player['health']}\033[0m")
+    print(f"Level: \033[34m{player['level']}\033[0m")
+    print(f"EXP: \033[35m{player['xp']}\033[0m")
+    print(f"Gold: \033[33m{player['gold']}\033[0m")
     print(f"Equipped Weapon: {player['equipped_items']['weapon']['name']} (Power: {player['equipped_items']['weapon']['power']})")
     print(f"Equipped Armour: {player['equipped_items']['armour']['name']} (Power: {player['equipped_items']['armour']['power']})")
     print(f"Equipped Jewellery: {player['equipped_items']['jewellery']['name']} (Power: {player['equipped_items']['jewellery']['power']})")
@@ -197,9 +200,25 @@ def collect_daily_reward(player):
     if player.get("last_daily") != today:
         player["gold"] += 20
         player["last_daily"] = today
-        print("Daily reward collected! +20 Gold")
+        print("Daily reward collected! \033[33m+20\033[0m Gold")
     else:
         print("You have already collected today's reward.")
+
+def change_name(player):
+    """Prompts player input to change player name."""
+    while True:
+        print("1. Yes")
+        print("2. No (Return to menu)")
+        choice = input(f"Your current names ia {player['name']}. Would you like to change it?")
+        if choice == "1":
+            new_name =  input("What would like your name to be?")
+            player["name"] = new_name
+            print(f"Your new names is {player['name']}. Godspeed, {player['name']}. Returning to menu.")
+            break
+        elif choice == "2":
+            break
+        else:
+            print("Invalid choice. Please try again.")
 
 # =============================
 #        ENTRY POINT

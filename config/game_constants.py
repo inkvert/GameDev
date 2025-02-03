@@ -1,5 +1,5 @@
 # Program version and tagline
-VERSION = "V1.2"
+VERSION = "V1.3"
 
 SAVE_FILE = "game_state.json"
 
