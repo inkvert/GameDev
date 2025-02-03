@@ -37,30 +37,30 @@ def attack(attacker, defender):
     """Handles an attack from one character to another."""
     damage = roll_damage(attacker["base_damage"])
     defender["health"] -= damage
-    print(f"{attacker['name']} attacks {defender['name']} and deals \033[31m{damage}\033[0m damage!")
-    print(f"{defender['name']} has \033[32m{max(defender['health'], 0)}\033[0m health remaining.\n")
+    print(f"\n{attacker['name']} attacks {defender['name']} and deals \033[31m{damage}\033[0m damage!")
+    print(f"{defender['name']} has \033[32m{max(defender['health'], 0)}\033[0m health remaining.")
     return defender["health"] <= 0  # Returns True if defender dies
 
 def fight_monster(player):
     """Handles the fight loop between the player and a monster."""
     monster = generate_monster()
-    print(f"\n{player['name']} encounters {monster['name']}!\n")
+    print(f"\n{player['name']} encounters {monster['name']}!")
 
     while player["health"] > 0 and monster["health"] > 0:
-        input("Press Enter to attack...")
+        input("\nPress Enter to attack...")
 
         # Player attacks first
         if attack(player, monster):
-            print(f"{monster['name']} has been defeated!")
+            print(f"\n{monster['name']} has been defeated!\n")
             player["gold"] += monster["gold_drop"]
             player["xp"] += monster["xp_reward"]
             player["health"] += player["regen"]
-            print(f"You gained \033[33m{monster['gold_drop']}\033[0m gold and \033[35m{monster['xp_reward']}\033[0m XP.")
+            print(f"{player['name']} gained \033[33m{monster['gold_drop']}\033[0m gold and \033[35m{monster['xp_reward']}\033[0m XP.")
             print(f"{player['name']} regenerates \033[32m{player['regen']}\033[0m health.\n")
             item = generate_random_item()
             item_type = random.choice(["Weapon", "Armour", "Jewellery"])
             rolled_item = item[item_type]
-            print(f"{player['name']} received {rolled_item['name']} as a drop!")
+            print(f"{player['name']} received \033[36m{rolled_item['name']}\033[0m as a drop!\n")
             player["inventory"].append({
                 "name" : rolled_item["name"],
                 "type" : item_type,
@@ -70,7 +70,7 @@ def fight_monster(player):
         
         # Monster retaliates
         if attack(monster, player):
-            print(f"{player['name']} has been defeated!")
+            print(f"\n{player['name']} has been defeated! Returning to Main Menu.\n")
             player["health"] = 100  # Reset player health after defeat
             return
 
@@ -151,9 +151,18 @@ def main():
 
     print("\nWelcome to GameDev Project, Version", VERSION)
     print("---------------------------------------------------\n")
+    print("   __ ,                                             ")
+    print("  ,-| ~                        -_____               ")
+    print(" ('||/__,   _                    ' | -,        ;    ")
+    print("(( |||  |  < \, \\\/\\\/\\\  _-_   /| |  |`  _-_  \\\/\ ")
+    print("(( |||==|  /-|| || || || || \\\  || |==|| || \\\ || | ")
+    print(" ( / |  , (( || || || || ||/   ~|| |  |, ||/   || | ")
+    print("  -____/   \/\\\ \\\ \\\ \\\ \\\,/   ~-____,  \\\,/  \\\/  ")
+    print("                               (                    ")
+    print("---------------------------------------------------\n")
 
     while True:
-        print("\n=== Main Menu ===")
+        print("=== Main Menu ===")
         print("1. Fight a Monster")
         print("2. Check Player Stats")
         print("3. Check Inventory")
@@ -161,7 +170,7 @@ def main():
         print("5. Change Name")
         print("6. Exit Game")
 
-        choice = input("Choose an option: ")
+        choice = input("\nChoose an option: ")
 
         if choice == "1":
             fight_monster(player)
@@ -213,7 +222,7 @@ def change_name(player):
         if choice == "1":
             new_name =  input("What would like your name to be?")
             player["name"] = new_name
-            print(f"Your new names is {player['name']}. Godspeed, {player['name']}. Returning to menu.")
+            print(f"Your new names is {player['name']}. Godspeed, {player['name']}. Returning to Main Menu.")
             break
         elif choice == "2":
             break
