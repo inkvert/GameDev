@@ -5,6 +5,8 @@
     "gold": 348,
     "health": 91,
     "base_damage": 10,
+    "base_crit_chance": 10,
+    "base_crit_bonus": 50,
     "regen": 84,
     "equipped_items": {
         "weapon": {
