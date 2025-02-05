@@ -3,11 +3,12 @@
     "level": 1,
     "xp": 92,
     "gold": 348,
+    "max_health": 100,
     "health": 91,
     "base_damage": 10,
     "base_crit_chance": 10,
     "base_crit_bonus": 50,
-    "regen": 84,
+    "regen": 90,
     "equipped_items": {
         "weapon": {
             "name": "None",

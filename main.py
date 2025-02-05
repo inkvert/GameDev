@@ -14,17 +14,19 @@ from config import save_utils
 #         MONSTER LOGIC
 # =============================
 
-def generate_monster():
+def generate_monster(player):
     """Generates a random dragon monster."""
+    monster_level = monster_level = player["level"] + random.randint(0, 1)
     return {
         "name": f"{random.choice(DRAGON_AGE)} {random.choice(DRAGON_PREFIXES)} Dragon",
-        "level": 1,
-        "health": 100,
-        "base_damage": 10,
+        "level": monster_level,
+        "max_health": (monster_level*10)+90,
+        "health": (monster_level*10)+90,
+        "base_damage":  monster_level+9,
         "base_crit_chance": 5,
         "base_crit_bonus": 50,
-        "gold_drop": random.randint(50, 500),
-        "xp_reward": random.randint(50, 500)
+        "gold_drop": int(((random.randint(300, 500))/100)*(100+(monster_level*10))),
+        "xp_reward": int(((random.randint(300, 500))/100)*(100+(monster_level*10)))
     }
 
 # =============================
@@ -54,10 +56,26 @@ def attack(attacker, defender):
           f"\033[32m{max(defender['health'], 0)}\033[0m health remaining.")
     return defender["health"] <= 0  # Returns True if defender dies
 
+def check_level_up(player):
+    """Checks if conditions are met for player to level up then returns boolean if so."""
+    xp_required = (player['level']**2)*100
+    if player["xp"] >= xp_required:
+        return True
+
+def level_up(player):
+    """Performs changes required to level up player."""
+    player["level"] += 1
+    player["xp"] = 0
+    print(f"{player['name']} levels up! {player["name"]} is now level {player["level"]}.\n")
+    player["regen"] += 10
+    player["base_damage"] += 1
+    player["max_health"] += 10
+    player["health"] =  player["max_health"]
+
 def fight_monster(player):
     """Handles the fight loop between the player and a monster."""
-    monster = generate_monster()
-    print(f"\n{player['name']} encounters {monster['name']}!")
+    monster = generate_monster(player)
+    print(f"\n{player['name']} encounters a level {monster['level']} {monster['name']}!")
 
     while player["health"] > 0 and monster["health"] > 0:
         input("\nPress Enter to attack...")
@@ -80,13 +98,19 @@ def fight_monster(player):
                 "type" : item_type,
                 "power" : rolled_item["power"]
             })
+            # Level up check
+            check_level_up(player)
+            if check_level_up(player):
+                level_up(player)
             return
 
         # Monster retaliates
         if attack(monster, player):
             print(f"\n{player['name']} has been defeated! Returning to Main Menu.\n")
-            player["health"] = 100  # Reset player health after defeat
+            player["health"] = player["max_health"]  # Reset player health after defeat
             return
+
+
 
 # =============================
 #        ITEM GENERATION
@@ -129,7 +153,6 @@ def generate_random_item():
                                jewellery_value + suffix_value + random_power}
     }
 
-
 def show_inventory(player):
     """Displays player's inventory items."""
     print("\n=== Player Inventory ===")
@@ -149,7 +172,6 @@ def show_inventory(player):
             equip_item(player, index)
         else:
             print("Invalid selection.")
-
 
 def equip_item(player, item_index):
     """Equips an item from the player's inventory."""
