@@ -16,14 +16,14 @@ from config import save_utils
 
 def generate_monster(player):
     """Generates a random dragon monster."""
-    monster_level = monster_level = player["level"] + random.randint(0, 1)
+    monster_level = player["level"] + random.randint(0, 1)
     return {
         "name": f"{random.choice(DRAGON_AGE)} {random.choice(DRAGON_PREFIXES)} Dragon",
         "level": monster_level,
         "max_health": (monster_level*10)+90,
         "health": (monster_level*10)+90,
         "base_damage":  monster_level+9,
-        "base_armour": monster_level+9,
+        "base_armour": monster_level,
         "base_crit_chance": 5,
         "base_crit_bonus": 50,
         "gold_drop": int(((random.randint(300, 500))/100)*(100+(monster_level*10))),
@@ -63,11 +63,25 @@ def roll_defence(defender):
     random_power = random.randint(0, int(armour_power))
     return base_defence + random_power
 
+def crit_chance (attacker):
+    """Calculates critical hit chance."""
+    base_crit_chance = attacker["base_crit_chance"]
+    jewellery_power = attacker["equipped_items"]["jewellery"]["power"]
+    jewellery_crit_chance = int(jewellery_power/3)
+    return base_crit_chance + jewellery_crit_chance
+
+def crit_bonus (attacker):
+    """Calculates critical hit nous."""
+    base_crit_bonus = attacker["base_crit_bonus"]
+    jewellery_power = attacker["equipped_items"]["jewellery"]["power"]
+    jewellery_crit_bonus = int(jewellery_power)
+    return base_crit_bonus + jewellery_crit_bonus
+
 def attack(attacker, defender):
     """Handles an attack from one character to another, and checks for critical hit/bonus."""
-    crit_roll = attacker["base_crit_chance"] + random.randint(1, 100)
+    crit_roll = crit_chance(attacker) + random.randint(1, 100)
     if crit_roll >= 100:
-        damage_before_armour = int(((roll_damage(attacker))*(100+attacker["base_crit_bonus"]))/100)
+        damage_before_armour = int(((roll_damage(attacker))*(100+crit_bonus(attacker)))/100)
         damage = damage_before_armour - roll_defence(defender)
         if damage >= 0:
             pass
@@ -93,7 +107,7 @@ def attack(attacker, defender):
     return defender["health"] <= 0  # Returns True if defender dies
 
 def check_level_up(player):
-    """Checks if conditions are met for player to level up then returns boolean if so."""
+    """Checks if conditions are met for player to level up and returns boolean."""
     xp_required = (player['level']**2)*100
     if player["xp"] >= xp_required:
         return True
@@ -121,13 +135,14 @@ def fight_monster(player):
             print(f"\n{monster['name']} has been defeated!\n")
             player["gold"] += monster["gold_drop"]
             player["xp"] += monster["xp_reward"]
-            player["health"] += player["regen"]
+            health_regen = player["regen"]+random.randint (1, 10)
+            player["health"] += health_regen
             if player["health"] > player["max_health"]:
                 player["health"] = player["max_health"]
             print(f"{player['name']} gained \033[33m{monster['gold_drop']}\033[0m gold"
                   f" and \033[35m{monster['xp_reward']}\033[0m XP.")
-            print(f"{player['name']} regenerates \033[32m{player['regen']}\033[0m health.\n")
-            item = generate_random_item()
+            print(f"{player['name']} regenerates \033[32m{health_regen}\033[0m health.\n")
+            item = generate_random_item(monster)
             item_type = random.choice(["Weapon", "Armour", "Jewellery"])
             rolled_item = item[item_type]
             print(f"{player['name']} received \033[36m{rolled_item['name']}\033[0m as a drop!\n")
@@ -152,9 +167,9 @@ def fight_monster(player):
 #        ITEM GENERATION
 # =============================
 
-def roll_item(dic):
+def roll_item(dic, monster):
     """Randomly rolls an item from a given dictionary with weighted probabilities."""
-    roll = random.randint(MIN_WEIGHT, MAX_WEIGHT)
+    roll = random.randint(MIN_WEIGHT, MAX_WEIGHT) + monster["level"]
     cumulative = 0
     for item, details in dic.items():
         cumulative += details["weight"]
@@ -162,15 +177,15 @@ def roll_item(dic):
             return item, details["power"]
     return None, 0
 
-def generate_random_item():
+def generate_random_item(monster):
     """Generates a random weapon, armor, or jewelry with properties."""
-    prefix, prefix_value = roll_item(item_prefixes)
-    material, material_value = roll_item(item_materials)
-    weapon, weapon_value = roll_item(weapon_types)
-    armour, armour_value = roll_item(armour_types)
-    jewellery, jewellery_value = roll_item(jewellery_types)
-    suffix, suffix_value = roll_item(item_suffixes)
-    random_power = random.randint(1, 10)
+    prefix, prefix_value = roll_item(item_prefixes, monster)
+    material, material_value = roll_item(item_materials, monster)
+    weapon, weapon_value = roll_item(weapon_types, monster)
+    armour, armour_value = roll_item(armour_types, monster)
+    jewellery, jewellery_value = roll_item(jewellery_types, monster)
+    suffix, suffix_value = roll_item(item_suffixes, monster)
+    random_power = random.randint(MIN_POWER, MAX_POWER)
 
     # Generate full item names
     weapon_name = f"{prefix} {material} {weapon} of the {suffix}"
@@ -199,8 +214,14 @@ def show_inventory(player):
     for index, item in enumerate(player["inventory"], start=1):
         print(f"{index}. {item['name']} (Type: {item['type']}, Power: {item['power']})")
 
-    print("\nEnter the number of an item to equip it, or press Enter to go back.")
-    choice = input("Choose an item: ")
+    print(f"\nEquipped Weapon: {player['equipped_items']['weapon']['name']} "
+          f"(Power: {player['equipped_items']['weapon']['power']})")
+    print(f"Equipped Armour: {player['equipped_items']['armour']['name']} "
+          f"(Power: {player['equipped_items']['armour']['power']})")
+    print(f"Equipped Jewellery: {player['equipped_items']['jewellery']['name']} "
+          f"(Power: {player['equipped_items']['jewellery']['power']})\n")
+    print("Enter the number of an item to equip it, or press Enter to go back.\n")
+    choice = input("Choose an item:\n ")
 
     if choice.isdigit():
         index = int(choice) - 1
@@ -263,7 +284,7 @@ def main():
             change_name(player)
         elif choice == "6":
             save_utils.save_player(player)
-            print("\nGame saved.")
+            print("\nGame saved.\n")
         elif choice == "7":
             save_utils.save_player(player)
             print("\nGame saved. Goodbye!")
@@ -278,7 +299,12 @@ def show_stats(player):
     print(f"Health: \033[32m{player['health']}\033[0m")
     print(f"Level: \033[34m{player['level']}\033[0m")
     print(f"EXP: \033[35m{player['xp']}\033[0m")
-    print(f"Gold: \033[33m{player['gold']}\033[0m")
+    print(f"Gold: \033[33m{player['gold']}\033[0m\n")
+
+    print(f"Base Damage: {player["equipped_items"]["weapon"]["power"] + player["base_damage"]}")
+    print(f"Crit Chance: {crit_chance(player)}%")
+    print(f"Crit Bonus: {crit_bonus(player)}%")
+    print(f"Armour: {player["equipped_items"]["armour"]["power"]}\n")
     print(f"Equipped Weapon: {player['equipped_items']['weapon']['name']} "
           f"(Power: {player['equipped_items']['weapon']['power']})")
     print(f"Equipped Armour: {player['equipped_items']['armour']['name']} "
@@ -302,17 +328,17 @@ def change_name(player):
     """Prompts player input to change player name."""
     while True:
         print("1. Yes")
-        print("2. No (Return to menu)")
-        choice = input(f"Your current names ia {player['name']}. Would you like to change it?")
+        print("2. No (Return to menu)\n")
+        choice = input(f"Your current names is {player['name']}. Would you like to change it?\n")
         if choice == "1":
-            new_name =  input("What would like your name to be?")
+            new_name =  input("What would like your name to be?\n")
             player["name"] = new_name
             print(f"Your new names is {player['name']}. "
-                  f"Godspeed, {player['name']}. Returning to Main Menu.")
+                  f"Godspeed, {player['name']}. Returning to Main Menu.\n")
             break
         if choice == "2":
             break
-        print("Invalid choice. Please try again.")
+        print("Invalid choice. Please try again.\n")
 
 # =============================
 #        ENTRY POINT

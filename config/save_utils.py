@@ -12,7 +12,6 @@ def load_player():
                 return json.load(file)
         except json.JSONDecodeError:
             print("Save file is corrupted. Resetting player data.")
-    
     # Default player stats if no save file exists
     return {
         "name": input("Enter your character's name: "),
@@ -20,15 +19,18 @@ def load_player():
         "xp": 0,
         "gold": 0,
         "health": 100,
+        "max_health": 100,
         "base_damage": 10,
-        "regen": 80 + random.randint(1, 10),
+        "base_armour": 0,
+        "base_crit_chance": 5,
+        "base_crit_bonus": 50,
+        "regen": 80,
         "equipped_items": {
             "weapon": {"name": "None", "power": 0},
             "armour": {"name": "None", "power": 0},
             "jewellery": {"name": "None", "power": 0}
         },
         "inventory" : []
-        
     }
 
 def save_player(player):
