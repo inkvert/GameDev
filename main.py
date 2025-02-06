@@ -23,32 +23,68 @@ def generate_monster(player):
         "max_health": (monster_level*10)+90,
         "health": (monster_level*10)+90,
         "base_damage":  monster_level+9,
+        "base_armour": monster_level+9,
         "base_crit_chance": 5,
         "base_crit_bonus": 50,
         "gold_drop": int(((random.randint(300, 500))/100)*(100+(monster_level*10))),
-        "xp_reward": int(((random.randint(300, 500))/100)*(100+(monster_level*10)))
+        "xp_reward": int(((random.randint(300, 500))/100)*(100+(monster_level*10))),
+        "equipped_items": {
+            "weapon": {
+                "name": "None",
+                "power": 0
+            },
+            "armour": {
+                "name": "None",
+                "power": 0
+            },
+            "jewellery": {
+                "name": "None",
+                "power": 0
+            }
+        }
     }
 
 # =============================
 #         COMBAT SYSTEM
 # =============================
 
-def roll_damage(base_damage):
-    """Calculates total damage based on base stats, critical hit/bonus and a random roll."""
-    return base_damage + random.randint(1, 10)
+def roll_damage(attacker):
+    """Calculates total damage based on base stats, equipped weapon and a random roll."""
+    base_damage = attacker["base_damage"]
+    weapon_power = attacker["equipped_items"]["weapon"]["power"]
+    random_power = random.randint(0, int(weapon_power))
+    random_base = random.randint(0, 10)
+    return base_damage + random_power + random_base
+
+def roll_defence(defender):
+    """Calculates total damage reduction based on equipped armour."""
+    base_defence = defender["base_armour"]
+    armour_power = defender["equipped_items"]["armour"]["power"]
+    random_power = random.randint(0, int(armour_power))
+    return base_defence + random_power
 
 def attack(attacker, defender):
     """Handles an attack from one character to another, and checks for critical hit/bonus."""
     crit_roll = attacker["base_crit_chance"] + random.randint(1, 100)
     if crit_roll >= 100:
-        damage = int(((roll_damage(attacker["base_damage"]))*(100+attacker["base_crit_bonus"]))/100)
+        damage_before_armour = int(((roll_damage(attacker))*(100+attacker["base_crit_bonus"]))/100)
+        damage = damage_before_armour - roll_defence(defender)
+        if damage >= 0:
+            pass
+        else:
+            damage = 0
         defender["health"] -= damage
         print(f"\n{attacker['name']} CRITS {defender['name']} "
               f"and deals \033[31m{damage}\033[0m damage!")
         print(f"{defender['name']} has "
               f"\033[32m{max(defender['health'], 0)}\033[0m health remaining.")
         return defender["health"] <= 0  # Returns True if defender dies
-    damage = roll_damage(attacker["base_damage"])
+    damage_before_armour = roll_damage(attacker)
+    damage = damage_before_armour - roll_defence(defender)
+    if damage >= 0:
+        pass
+    else:
+        damage = 0
     defender["health"] -= damage
     print(f"\n{attacker['name']} attacks {defender['name']} "
             f"and deals \033[31m{damage}\033[0m damage!")
@@ -86,6 +122,8 @@ def fight_monster(player):
             player["gold"] += monster["gold_drop"]
             player["xp"] += monster["xp_reward"]
             player["health"] += player["regen"]
+            if player["health"] > player["max_health"]:
+                player["health"] = player["max_health"]
             print(f"{player['name']} gained \033[33m{monster['gold_drop']}\033[0m gold"
                   f" and \033[35m{monster['xp_reward']}\033[0m XP.")
             print(f"{player['name']} regenerates \033[32m{player['regen']}\033[0m health.\n")
@@ -109,8 +147,6 @@ def fight_monster(player):
             print(f"\n{player['name']} has been defeated! Returning to Main Menu.\n")
             player["health"] = player["max_health"]  # Reset player health after defeat
             return
-
-
 
 # =============================
 #        ITEM GENERATION
@@ -180,7 +216,7 @@ def equip_item(player, item_index):
 
     # Equip the item in the correct slot
     player["equipped_items"][item_type.lower()] = {"name": item["name"], "power": item["power"]}
-    print(f"\nEquipped {item['name']}! (Power: {item['power']})")
+    print(f"\nEquipped {item['name']}! (Power: {item['power']})\n")
 
 # =============================
 #        GAME LOOP
@@ -210,7 +246,8 @@ def main():
         print("3. Check Inventory")
         print("4. Collect Daily Reward")
         print("5. Change Name")
-        print("6. Exit Game")
+        print("6. Save Game")
+        print("7. Save and Exit")
 
         choice = input("\nChoose an option (or press Enter to fight): ")
 
@@ -226,7 +263,10 @@ def main():
             change_name(player)
         elif choice == "6":
             save_utils.save_player(player)
-            print("Game saved. Goodbye!")
+            print("\nGame saved.")
+        elif choice == "7":
+            save_utils.save_player(player)
+            print("\nGame saved. Goodbye!")
             break
         else:
             print("Invalid choice. Please try again.")

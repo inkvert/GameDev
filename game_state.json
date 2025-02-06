@@ -1,18 +1,19 @@
 {
     "name": "Bob",
-    "level": 1,
-    "xp": 92,
-    "gold": 348,
-    "max_health": 100,
-    "health": 91,
-    "base_damage": 10,
-    "base_crit_chance": 10,
+    "level": 5,
+    "xp": 2035,
+    "gold": 5691,
+    "max_health": 140,
+    "health": 289,
+    "base_damage": 14,
+    "base_armour": 0,
+    "base_crit_chance": 5,
     "base_crit_bonus": 50,
-    "regen": 90,
+    "regen": 130,
     "equipped_items": {
         "weapon": {
-            "name": "None",
-            "power": 0
+            "name": "Trusty Copper Axe of the Mouse",
+            "power": 9
         },
         "armour": {
             "name": "Trusty Bronze Garb of the Dog",
@@ -23,5 +24,52 @@
             "power": 0
         }
     },
-    "inventory": []
+    "inventory": [
+        {
+            "name": "Fortunate Copper Cuirass of the Mouse",
+            "type": "Armour",
+            "power": 9
+        },
+        {
+            "name": "Trusty Bronze Earring of the Mouse",
+            "type": "Jewellery",
+            "power": 13
+        },
+        {
+            "name": "Trusty Iron Bangle of the Dog",
+            "type": "Jewellery",
+            "power": 13
+        },
+        {
+            "name": "Fortunate Iron Bracelet of the Mouse",
+            "type": "Jewellery",
+            "power": 16
+        },
+        {
+            "name": "Trusty Bronze Garb of the Rabbit",
+            "type": "Armour",
+            "power": 8
+        },
+        {
+            "name": "Fortunate Steel Bangle of the Cat",
+            "type": "Jewellery",
+            "power": 17
+        },
+        {
+            "name": "Trusty Copper Axe of the Dog",
+            "type": "Weapon",
+            "power": 16
+        },
+        {
+            "name": "Lucky Bronze Garb of the Mouse",
+            "type": "Armour",
+            "power": 11
+        },
+        {
+            "name": "Uncanny Bronze Hauberk of the Mouse",
+            "type": "Armour",
+            "power": 19
+        }
+    ],
+    "last_daily": "2025-02-06"
 }
