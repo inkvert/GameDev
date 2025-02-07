@@ -145,7 +145,7 @@ def fight_monster(player):
             item = generate_random_item(monster)
             item_type = random.choice(["Weapon", "Armour", "Jewellery"])
             rolled_item = item[item_type]
-            print(f"{player['name']} received \033[36m{rolled_item['name']}\033[0m as a drop!\n")
+            print(f"{player['name']} received \033[36m{rolled_item['name']}\033[0m as a drop!")
             player["inventory"].append({
                 "name" : rolled_item["name"],
                 "type" : item_type,
@@ -169,11 +169,14 @@ def fight_monster(player):
 
 def roll_item(dic, monster):
     """Randomly rolls an item from a given dictionary with weighted probabilities."""
-    roll = random.randint(MIN_WEIGHT, MAX_WEIGHT) + monster["level"]
+    roll = random.randint(MIN_WEIGHT, MAX_WEIGHT) + (monster["level"]*5)
     cumulative = 0
     for item, details in dic.items():
         cumulative += details["weight"]
         if roll <= cumulative:
+            return item, details["power"]
+    for item, details in dic.items():
+        if details["weight"] == 1:
             return item, details["power"]
     return None, 0
 
@@ -210,9 +213,9 @@ def show_inventory(player):
     if not player["inventory"]:
         print("Your inventory is empty.\n")
         return
-    for index, item in enumerate(player["inventory"], start=1):
+    sorted_inventory = sorted(player["inventory"], key=lambda x: x['power'], reverse=True)
+    for index, item in enumerate(sorted_inventory, start=1):
         print(f"{index}. {item['name']} (Type: {item['type']}, Power: {item['power']})")
-
     print(f"\nEquipped Weapon: {player['equipped_items']['weapon']['name']} "
           f"(Power: {player['equipped_items']['weapon']['power']})")
     print(f"Equipped Armour: {player['equipped_items']['armour']['name']} "
@@ -220,7 +223,7 @@ def show_inventory(player):
     print(f"Equipped Jewellery: {player['equipped_items']['jewellery']['name']} "
           f"(Power: {player['equipped_items']['jewellery']['power']})\n")
     print("Enter the number of an item to equip it, or press Enter to go back.\n")
-    choice = input("Choose an item:\n ")
+    choice = input("Choose an item: ")
 
     if choice.isdigit():
         index = int(choice) - 1
@@ -236,7 +239,7 @@ def equip_item(player, item_index):
 
     # Equip the item in the correct slot
     player["equipped_items"][item_type.lower()] = {"name": item["name"], "power": item["power"]}
-    print(f"\nEquipped {item['name']}! (Power: {item['power']})\n")
+    print(f"\nEquipped {item['name']}! (Power: {item['power']})")
 
 # =============================
 #        GAME LOOP
@@ -257,12 +260,12 @@ def main():
     print(" ( / |  , (( || || || || ||/   ~|| |  |, ||/   || | ")
     print("  -____/   //// // // // //,/   ~-____,  //,/  ///  ")
     print("                               (                    ")
-    print("----------------------------------------------------\n")
+    print("----------------------------------------------------")
 
     while True:
-        print("=== Main Menu ===")
+        print("\n=== Main Menu ===")
         print("1. Fight a Monster")
-        print("2. Item Gambler")
+        print("2. Item Merchant")
         print("3. Check Player Stats")
         print("4. Check Inventory")
         print("5. Collect Daily Reward")
@@ -275,7 +278,7 @@ def main():
         if choice in ["1", ""]:
             fight_monster(player)
         elif choice == "2":
-            item_gambler(player)
+            item_merchant(player)
         elif choice == "3":
             show_stats(player)
         elif choice == "4":
@@ -295,28 +298,28 @@ def main():
             print("Invalid choice. Please try again.")
 
 
-def item_gambler(player):
-    """Opens the item gambler."""
-    print("\n=== Item Gambler ===")
+def item_merchant(player):
+    """Opens the item merchant."""
+    print("\n=== Item Merchant ===")
     print("\nYou approach the hooded figure.")
-    gamble_cost = 10000
+    merchant_cost = 10000
     print(f"\nYou have \033[33m{player['gold']:,}\033[0m gold. "
-          f"Gambling costs \033[33m{gamble_cost:,}\033[0m gold.")
+          f"Buying an item costs \033[33m{merchant_cost:,}\033[0m gold.")
     while True:
         print("\n1. Yes")
         print("2. No (Return to menu)\n")
-        choice = input("'Oh, stranger... want to gamble?'")
+        choice = input("'Oh, stranger... are you buyin'?'")
         if choice == "2":
             return
         if choice != "1":
             print("\nInvalid choice. Please try again.")
             continue
         while True:
-            if player['gold'] < gamble_cost:
+            if player['gold'] < merchant_cost:
                 print("\n'Not enough gold, stranger...'")
                 print("\nReturning to menu.\n")
                 return
-            player['gold'] -= gamble_cost
+            player['gold'] -= merchant_cost
             monster = generate_monster(player)
             item = generate_random_item(monster)
             item_type = random.choice(["Weapon", "Armour", "Jewellery"])
@@ -331,7 +334,7 @@ def item_gambler(player):
             })
             print("\n1. Yes")
             print("2. No (Return to menu)")
-            choice = input("\n'Want to gamble again, stranger?'")
+            choice = input("\n'Are you buyin' again, stranger?'")
             if choice == "2":
                 return
             if choice != "1":
@@ -357,7 +360,7 @@ def show_stats(player):
           f"(Power: {player['equipped_items']['armour']['power']})")
     print(f"Equipped Jewellery: {player['equipped_items']['jewellery']['name']} "
           f"(Power: {player['equipped_items']['jewellery']['power']})")
-    print("--------------------------\n")
+    print("--------------------------")
 
 def collect_daily_reward(player):
     """Grants a daily reward if not already collected today."""
@@ -369,7 +372,7 @@ def collect_daily_reward(player):
         player["last_daily"] = today
         print(f"\nDaily reward collected! +\033[33m{daily_gold:,}\033[0m Gold\n")
     else:
-        print("\nYou have already collected today's reward.\n")
+        print("\nYou have already collected today's reward.")
 
 def change_name(player):
     """Prompts player input to change player name."""
@@ -381,7 +384,7 @@ def change_name(player):
             new_name =  input("What would like your name to be?\n")
             player["name"] = new_name
             print(f"Your new names is {player['name']}. "
-                  f"Godspeed, {player['name']}. Returning to Main Menu.\n")
+                  f"Godspeed, {player['name']}. Returning to Main Menu.")
             break
         if choice == "2":
             break
