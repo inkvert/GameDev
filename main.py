@@ -2,12 +2,11 @@
 """GameDev - a loot rolling RPG, by Vader and ink."""
 
 import random
-import json
 from datetime import date
 from enemies.enemies import DRAGON_AGE, DRAGON_PREFIXES
 from items.item_constants import (item_prefixes, item_suffixes, item_materials,
-                                  armour_types, jewellery_types, weapon_types, item_types)
-from config.game_constants import VERSION, MIN_WEIGHT, MAX_WEIGHT, MIN_POWER, MAX_POWER, SAVE_FILE
+                                  armour_types, jewellery_types, weapon_types)
+from config.game_constants import VERSION, MIN_WEIGHT, MAX_WEIGHT, MIN_POWER, MAX_POWER
 from config import save_utils
 
 # =============================
@@ -89,9 +88,9 @@ def attack(attacker, defender):
             damage = 0
         defender["health"] -= damage
         print(f"\n{attacker['name']} CRITS {defender['name']} "
-              f"and deals \033[31m{damage:,}\033[0m damage!")
+              f"and deals {damage:,} damage!")
         print(f"{defender['name']} has "
-              f"\033[32m{max(defender['health'], 0):,}\033[0m health remaining.")
+              f"{max(defender['health'], 0):,} health remaining.")
         return defender["health"] <= 0  # Returns True if defender dies
     damage_before_armour = roll_damage(attacker)
     damage = damage_before_armour - roll_defence(defender)
@@ -101,9 +100,9 @@ def attack(attacker, defender):
         damage = 0
     defender["health"] -= damage
     print(f"\n{attacker['name']} attacks {defender['name']} "
-            f"and deals \033[31m{damage:,}\033[0m damage!")
+            f"and deals {damage:,} damage!")
     print(f"{defender['name']} has "
-          f"\033[32m{max(defender['health'], 0):,}\033[0m health remaining.")
+          f"{max(defender['health'], 0):,} health remaining.")
     return defender["health"] <= 0  # Returns True if defender dies
 
 def check_level_up(player):
@@ -116,7 +115,7 @@ def level_up(player):
     player["level"] += 1
     player["xp"] = 0
     print(f"\n{player['name']} levels up! {player["name"]} "
-          f"is now level 033[34m{player["level"]:,}\033[0m.")
+          f"is now level 033[34m{player["level"]:,}.")
     player["regen"] += 10
     player["base_damage"] += 1
     player["max_health"] += 10
@@ -126,7 +125,7 @@ def fight_monster(player):
     """Handles the fight loop between the player and a monster."""
     monster = generate_monster(player)
     print(f"\n{player['name']} encounters a level "
-          f"\033[34m{monster['level']}\033[0m {monster['name']}!")
+          f"{monster['level']} {monster['name']}!")
 
     while player["health"] > 0 and monster["health"] > 0:
         input("\nPress Enter to attack...")
@@ -139,13 +138,13 @@ def fight_monster(player):
             player["health"] += health_regen
             if player["health"] > player["max_health"]:
                 player["health"] = player["max_health"]
-            print(f"{player['name']} gained \033[33m{monster['gold_drop']:,}\033[0m gold"
-                  f" and \033[35m{monster['xp_reward']:,}\033[0m XP.")
-            print(f"{player['name']} regenerates \033[32m{health_regen:,}\033[0m health.\n")
+            print(f"{player['name']} gained {monster['gold_drop']:,} gold"
+                  f" and {monster['xp_reward']:,} XP.")
+            print(f"{player['name']} regenerates {health_regen:,} health.\n")
             item = generate_random_item(monster)
             item_type = random.choice(["Weapon", "Armour", "Jewellery"])
             rolled_item = item[item_type]
-            print(f"{player['name']} received \033[36m{rolled_item['name']}\033[0m "
+            print(f"{player['name']} received {rolled_item['name']} "
                   f"(Power: {rolled_item['power']}) as a drop!")
             player["inventory"].append({
                 "name" : rolled_item["name"],
@@ -217,11 +216,11 @@ def show_inventory(player):
         sorted_inventory = sorted(player["inventory"], key=lambda x: x['power'], reverse=True)
         for index, item in enumerate(sorted_inventory, start=1):
             print(f"{index}. {item['name']} (Type: {item['type']}, Power: {item['power']})")
-        print(f"\nEquipped Weapon:\033[36m {player['equipped_items']['weapon']['name']}\033[0m "
+        print(f"\nEquipped Weapon: {player['equipped_items']['weapon']['name']} "
               f"(Power: {player['equipped_items']['weapon']['power']})")
-        print(f"Equipped Armour:\033[36m {player['equipped_items']['armour']['name']}\033[0m "
+        print(f"Equipped Armour: {player['equipped_items']['armour']['name']} "
               f"(Power: {player['equipped_items']['armour']['power']})")
-        print(f"Equipped Jewellery:\033[36m {player['equipped_items']['jewellery']['name']}\033[0m "
+        print(f"Equipped Jewellery: {player['equipped_items']['jewellery']['name']} "
               f"(Power: {player['equipped_items']['jewellery']['power']})\n")
         print("Enter the number of an item to equip it, or press Enter to go back.\n")
         choice = input("Choose an item: ")
@@ -315,8 +314,8 @@ def item_merchant(player):
     print("\n=== Item Merchant ===")
     print("\nYou approach the hooded figure.")
     merchant_cost = 10000
-    print(f"\nYou have \033[33m{player['gold']:,}\033[0m gold. "
-          f"Buying an item costs \033[33m{merchant_cost:,}\033[0m gold.")
+    print(f"\nYou have {player['gold']:,} gold. "
+          f"Buying an item costs {merchant_cost:,} gold.")
     while True:
         print("\n1. Yes")
         print("2. No (Return to menu)\n")
@@ -337,9 +336,9 @@ def item_merchant(player):
             item_type = random.choice(["Weapon", "Armour", "Jewellery"])
             rolled_item = item[item_type]
             print("\n'Excellent choice, stranger... here you go.'")
-            print(f"\n{player['name']} received \033[36m{rolled_item['name']}\033[0m "
+            print(f"\n{player['name']} received {rolled_item['name']} "
                   f"(Power: {rolled_item['power']})!")
-            print(f"\nYou now have \033[33m{player['gold']:,}\033[0m gold.")
+            print(f"\nYou now have {player['gold']:,} gold.")
             player["inventory"].append({
                 "name": rolled_item["name"],
                 "type": item_type,
@@ -364,22 +363,22 @@ def show_stats(player):
         percentage_to_level = 0
     print("\n=== Player Stats ===")
     print(f"Name: {player['name']}")
-    print(f"Level: \033[34m{player['level']:,}\033[0m")
-    print(f"Health: \033[32m{player['health']:,}\033[0m")
-    print(f"EXP: \033[35m{player['xp']:,}\033[0m")
-    print(f"Next level: \033[35m{xp_next_level:,}\033[0m")
-    print(f"Next level %: \033[35m{percentage_to_level:,}%\033[0m")
-    print(f"Gold: \033[33m{player['gold']:,}\033[0m\n")
-    print(f"Crit Chance: \033[31m{crit_chance(player)}%\033[0m")
-    print(f"Crit Bonus: \033[31m{crit_bonus(player)}%\033[0m")
-    print(f"Base Damage: \033[31m{player["equipped_items"]["weapon"]["power"]
-                                  + player["base_damage"]}\033[0m")
-    print(f"Total Armour: \033[31m{player["equipped_items"]["armour"]["power"]}\033[0m\n")
-    print(f"Equipped Weapon:\033[36m {player['equipped_items']['weapon']['name']}\033[0m "
+    print(f"Level: {player['level']:,}")
+    print(f"Health: {player['health']:,}")
+    print(f"EXP: {player['xp']:,}")
+    print(f"Next level: {xp_next_level:,}")
+    print(f"Next level %: {percentage_to_level:,}%")
+    print(f"Gold: {player['gold']:,}\n")
+    print(f"Crit Chance: {crit_chance(player)}%")
+    print(f"Crit Bonus: {crit_bonus(player)}%")
+    print(f"Base Damage: {player["equipped_items"]["weapon"]["power"]
+                                  + player["base_damage"]}")
+    print(f"Total Armour: {player["equipped_items"]["armour"]["power"]}\n")
+    print(f"Equipped Weapon: {player['equipped_items']['weapon']['name']} "
           f"(Power: {player['equipped_items']['weapon']['power']})")
-    print(f"Equipped Armour:\033[36m {player['equipped_items']['armour']['name']}\033[0m "
+    print(f"Equipped Armour: {player['equipped_items']['armour']['name']} "
           f"(Power: {player['equipped_items']['armour']['power']})")
-    print(f"Equipped Jewellery:\033[36m {player['equipped_items']['jewellery']['name']}\033[0m "
+    print(f"Equipped Jewellery: {player['equipped_items']['jewellery']['name']} "
           f"(Power: {player['equipped_items']['jewellery']['power']})")
     print("--------------------------")
 
@@ -399,9 +398,9 @@ def disenchanter(player):
             player["inventory"].clear()
             print("\nThe wizard casts a spell, "
                   "and your items have been transmuted into a pile of gold coins.")
-            print(f"\nYou received \033[33m{gold_reward:,}\033[0m gold "
-                  f"for \033[36m{items_count:,}\033[0m disenchanted items!")
-            print(f"\nYou now have \033[33m{player['gold']:,}\033[0m gold.")
+            print(f"\nYou received {gold_reward:,} gold "
+                  f"for {items_count:,} disenchanted items!")
+            print(f"\nYou now have {player['gold']:,} gold.")
             print("\nReturning to menu.")
             return
         if choice == "2":
@@ -416,7 +415,7 @@ def collect_daily_reward(player):
         daily_gold = 1000
         player["gold"] += daily_gold
         player["last_daily"] = today
-        print(f"\nDaily reward collected! +\033[33m{daily_gold:,}\033[0m Gold\n")
+        print(f"\nDaily reward collected! +{daily_gold:,} Gold\n")
     else:
         print("\nYou have already collected today's reward.")
 
