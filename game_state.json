@@ -1,0 +1,54 @@
+{
+    "name": "Ink",
+    "level": 12,
+    "xp": 4382,
+    "gold": 8191,
+    "health": 210,
+    "max_health": 210,
+    "base_damage": 21,
+    "base_armour": 0,
+    "base_crit_chance": 5,
+    "base_crit_bonus": 50,
+    "regen": 190,
+    "equipped_items": {
+        "weapon": {
+            "name": "Fortunate Copper Sword of the Basilisk",
+            "power": 26
+        },
+        "armour": {
+            "name": "Fortunate Bronze Tunic of the Cat",
+            "power": 20
+        },
+        "jewellery": {
+            "name": "Fortunate Titanium Bangle of the Rabbit",
+            "power": 35
+        }
+    },
+    "inventory": [
+        {
+            "name": "Fortunate Iron Garb of the Rabbit",
+            "type": "Armour",
+            "power": 17
+        },
+        {
+            "name": "Trusty Copper Garb of the Mouse",
+            "type": "Armour",
+            "power": 10
+        },
+        {
+            "name": "Lucky Copper Axe of the Basilisk",
+            "type": "Weapon",
+            "power": 35
+        },
+        {
+            "name": "Trusty Copper Tunic of the Mouse",
+            "type": "Armour",
+            "power": 14
+        },
+        {
+            "name": "Uncanny Copper Ring of the Rabbit",
+            "type": "Jewellery",
+            "power": 17
+        }
+    ]
+}

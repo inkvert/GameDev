@@ -359,7 +359,7 @@ def show_stats(player):
     next_level = int(player['level']+1)
     xp_next_level = (next_level**2)*100
     try:
-        percentage_to_level = int((player['xp'] / next_level) * 100)
+        percentage_to_level = int((player['xp']/xp_next_level)*100)
     except ZeroDivisionError:
         percentage_to_level = 0
     print("\n=== Player Stats ===")
@@ -370,10 +370,10 @@ def show_stats(player):
     print(f"Next level: \033[35m{xp_next_level:,}\033[0m")
     print(f"Next level %: \033[35m{percentage_to_level:,}%\033[0m")
     print(f"Gold: \033[33m{player['gold']:,}\033[0m\n")
-    print(f"Base Damage: \033[31m{player["equipped_items"]["weapon"]["power"]
-                                  + player["base_damage"]}\033[0m")
     print(f"Crit Chance: \033[31m{crit_chance(player)}%\033[0m")
     print(f"Crit Bonus: \033[31m{crit_bonus(player)}%\033[0m")
+    print(f"Base Damage: \033[31m{player["equipped_items"]["weapon"]["power"]
+                                  + player["base_damage"]}\033[0m")
     print(f"Total Armour: \033[31m{player["equipped_items"]["armour"]["power"]}\033[0m\n")
     print(f"Equipped Weapon:\033[36m {player['equipped_items']['weapon']['name']}\033[0m "
           f"(Power: {player['equipped_items']['weapon']['power']})")
