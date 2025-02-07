@@ -22,8 +22,8 @@ def generate_monster(player):
         "level": monster_level,
         "max_health": (monster_level*10)+90,
         "health": (monster_level*10)+90,
-        "base_damage":  monster_level+9,
-        "base_armour": monster_level,
+        "base_damage": int(monster_level*1.5)+5,
+        "base_armour": int(monster_level*1.5),
         "base_crit_chance": 5,
         "base_crit_bonus": 50,
         "gold_drop": int(((random.randint(300, 500))/100)*(100+(monster_level*10))),
@@ -81,7 +81,7 @@ def attack(attacker, defender):
     """Handles an attack from one character to another, and checks for critical hit/bonus."""
     crit_roll = crit_chance(attacker) + random.randint(1, 100)
     if crit_roll >= 100:
-        damage_before_armour = int(((roll_damage(attacker))*(100+crit_bonus(attacker)))/100)
+        damage_before_armour = int((roll_damage(attacker)/100)*(100+crit_bonus(attacker)))
         damage = damage_before_armour - roll_defence(defender)
         if damage >= 0:
             pass
@@ -115,7 +115,8 @@ def level_up(player):
     """Performs changes required to level up player."""
     player["level"] += 1
     player["xp"] = 0
-    print(f"{player['name']} levels up! {player["name"]} is now level {player["level"]:,}.\n")
+    print(f"\n{player['name']} levels up! {player["name"]} "
+          f"is now level 033[34m{player["level"]:,}\033[0m.")
     player["regen"] += 10
     player["base_damage"] += 1
     player["max_health"] += 10
@@ -124,7 +125,8 @@ def level_up(player):
 def fight_monster(player):
     """Handles the fight loop between the player and a monster."""
     monster = generate_monster(player)
-    print(f"\n{player['name']} encounters a level {monster['level']} {monster['name']}!")
+    print(f"\n{player['name']} encounters a level "
+          f"\033[34m{monster['level']}\033[0m {monster['name']}!")
 
     while player["health"] > 0 and monster["health"] > 0:
         input("\nPress Enter to attack...")
@@ -143,7 +145,8 @@ def fight_monster(player):
             item = generate_random_item(monster)
             item_type = random.choice(["Weapon", "Armour", "Jewellery"])
             rolled_item = item[item_type]
-            print(f"{player['name']} received \033[36m{rolled_item['name']}\033[0m as a drop!")
+            print(f"{player['name']} received \033[36m{rolled_item['name']}\033[0m "
+                  f"(Power: {rolled_item['power']}) as a drop!")
             player["inventory"].append({
                 "name" : rolled_item["name"],
                 "type" : item_type,
@@ -156,7 +159,7 @@ def fight_monster(player):
 
         # Monster retaliates
         if attack(monster, player):
-            print(f"\n{player['name']} has been defeated! Returning to Main Menu.\n")
+            print(f"\n{player['name']} has been defeated! Returning to Main Menu.")
             player["health"] = player["max_health"]  # Reset player health after defeat
             return
 
@@ -269,7 +272,6 @@ def main():
     print("  -____/   //// // // // //,/   ~-____,  //,/  ///  ")
     print("                               (                    ")
     print("----------------------------------------------------")
-
     while True:
         print("\n=== Main Menu ===")
         print("1. Fight Monster")
@@ -300,7 +302,7 @@ def main():
             change_name(player)
         elif choice == "8":
             save_utils.save_player(player)
-            print("\nGame saved.\n")
+            print("\nGame saved.")
         elif choice == "9":
             save_utils.save_player(player)
             print("\nGame saved. Goodbye!")
@@ -327,7 +329,7 @@ def item_merchant(player):
         while True:
             if player['gold'] < merchant_cost:
                 print("\n'Not enough gold, stranger...'")
-                print("\nReturning to menu.\n")
+                print("\nReturning to menu.")
                 return
             player['gold'] -= merchant_cost
             monster = generate_monster(player)
@@ -335,7 +337,8 @@ def item_merchant(player):
             item_type = random.choice(["Weapon", "Armour", "Jewellery"])
             rolled_item = item[item_type]
             print("\n'Excellent choice, stranger... here you go.'")
-            print(f"\n{player['name']} received \033[36m{rolled_item['name']}\033[0m!")
+            print(f"\n{player['name']} received \033[36m{rolled_item['name']}\033[0m "
+                  f"(Power: {rolled_item['power']})!")
             print(f"\nYou now have \033[33m{player['gold']:,}\033[0m gold.")
             player["inventory"].append({
                 "name": rolled_item["name"],
@@ -353,17 +356,25 @@ def item_merchant(player):
 
 def show_stats(player):
     """Displays the player's stats."""
+    next_level = int(player['level']+1)
+    xp_next_level = (next_level**2)*100
+    try:
+        percentage_to_level = int((player['xp'] / next_level) * 100)
+    except ZeroDivisionError:
+        percentage_to_level = 0
     print("\n=== Player Stats ===")
     print(f"Name: {player['name']}")
     print(f"Level: \033[34m{player['level']:,}\033[0m")
     print(f"Health: \033[32m{player['health']:,}\033[0m")
     print(f"EXP: \033[35m{player['xp']:,}\033[0m")
+    print(f"Next level: \033[35m{xp_next_level:,}\033[0m")
+    print(f"Next level %: \033[35m{percentage_to_level:,}%\033[0m")
     print(f"Gold: \033[33m{player['gold']:,}\033[0m\n")
-
-    print(f"Base Damage: {player["equipped_items"]["weapon"]["power"] + player["base_damage"]}")
-    print(f"Crit Chance: {crit_chance(player)}%")
-    print(f"Crit Bonus: {crit_bonus(player)}%")
-    print(f"Armour: {player["equipped_items"]["armour"]["power"]}\n")
+    print(f"Base Damage: \033[31m{player["equipped_items"]["weapon"]["power"]
+                                  + player["base_damage"]}\033[0m")
+    print(f"Crit Chance: \033[31m{crit_chance(player)}%\033[0m")
+    print(f"Crit Bonus: \033[31m{crit_bonus(player)}%\033[0m")
+    print(f"Total Armour: \033[31m{player["equipped_items"]["armour"]["power"]}\033[0m\n")
     print(f"Equipped Weapon:\033[36m {player['equipped_items']['weapon']['name']}\033[0m "
           f"(Power: {player['equipped_items']['weapon']['power']})")
     print(f"Equipped Armour:\033[36m {player['equipped_items']['armour']['name']}\033[0m "
@@ -417,7 +428,7 @@ def change_name(player):
         print("2. No (Return to menu)\n")
         choice = input(f"Your current names is {player['name']}. Would you like to change it?\n")
         if choice == "1":
-            new_name =  input("What would like your name to be?\n")
+            new_name =  input("\nWhat would like your name to be?\n")
             player["name"] = new_name
             print(f"Your new names is {player['name']}. "
                   f"Godspeed, {player['name']}. Returning to Main Menu.")
