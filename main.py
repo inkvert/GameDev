@@ -109,8 +109,7 @@ def attack(attacker, defender):
 def check_level_up(player):
     """Checks if conditions are met for player to level up and returns boolean."""
     xp_required = (player['level']**2)*100
-    if player["xp"] >= xp_required:
-        return True
+    return player["xp"] >= xp_required
 
 def level_up(player):
     """Performs changes required to level up player."""
@@ -129,7 +128,6 @@ def fight_monster(player):
 
     while player["health"] > 0 and monster["health"] > 0:
         input("\nPress Enter to attack...")
-
         # Player attacks first
         if attack(player, monster):
             print(f"\n{monster['name']} has been defeated!\n")
@@ -151,7 +149,6 @@ def fight_monster(player):
                 "type" : item_type,
                 "power" : rolled_item["power"]
             })
-            # Level up check
             check_level_up(player)
             if check_level_up(player):
                 level_up(player)
@@ -209,21 +206,32 @@ def generate_random_item(monster):
 
 def show_inventory(player):
     """Displays player's inventory items."""
-    print("\n=== Player Inventory ===")
-    if not player["inventory"]:
-        print("Your inventory is empty.\n")
-        return
-    sorted_inventory = sorted(player["inventory"], key=lambda x: x['power'], reverse=True)
-    for index, item in enumerate(sorted_inventory, start=1):
-        print(f"{index}. {item['name']} (Type: {item['type']}, Power: {item['power']})")
-    print(f"\nEquipped Weapon: {player['equipped_items']['weapon']['name']} "
-          f"(Power: {player['equipped_items']['weapon']['power']})")
-    print(f"Equipped Armour: {player['equipped_items']['armour']['name']} "
-          f"(Power: {player['equipped_items']['armour']['power']})")
-    print(f"Equipped Jewellery: {player['equipped_items']['jewellery']['name']} "
-          f"(Power: {player['equipped_items']['jewellery']['power']})\n")
-    print("Enter the number of an item to equip it, or press Enter to go back.\n")
-    choice = input("Choose an item: ")
+    while True:
+        print("\n=== Player Inventory ===")
+        if not player["inventory"]:
+            print("\nYour inventory is empty.")
+            return
+        sorted_inventory = sorted(player["inventory"], key=lambda x: x['power'], reverse=True)
+        for index, item in enumerate(sorted_inventory, start=1):
+            print(f"{index}. {item['name']} (Type: {item['type']}, Power: {item['power']})")
+        print(f"\nEquipped Weapon:\033[36m {player['equipped_items']['weapon']['name']}\033[0m "
+              f"(Power: {player['equipped_items']['weapon']['power']})")
+        print(f"Equipped Armour:\033[36m {player['equipped_items']['armour']['name']}\033[0m "
+              f"(Power: {player['equipped_items']['armour']['power']})")
+        print(f"Equipped Jewellery:\033[36m {player['equipped_items']['jewellery']['name']}\033[0m "
+              f"(Power: {player['equipped_items']['jewellery']['power']})\n")
+        print("Enter the number of an item to equip it, or press Enter to go back.\n")
+        choice = input("Choose an item: ")
+        if choice == "":
+            break
+        if choice.isdigit():
+            index = int(choice) - 1
+            if 0 <= index < len(sorted_inventory):
+                item_to_equip = sorted_inventory[index]
+                original_index = player["inventory"].index(item_to_equip)
+                equip_item(player, original_index)
+            else:
+                print("Invalid selection.")
 
     if choice.isdigit():
         index = int(choice) - 1
@@ -264,39 +272,41 @@ def main():
 
     while True:
         print("\n=== Main Menu ===")
-        print("1. Fight a Monster")
-        print("2. Item Merchant")
-        print("3. Check Player Stats")
-        print("4. Check Inventory")
-        print("5. Collect Daily Reward")
-        print("6. Change Name")
-        print("7. Save Game")
-        print("8. Save and Exit")
+        print("1. Fight Monster")
+        print("2. Player Stats")
+        print("3. Inventory")
+        print("4. Merchant")
+        print("5. Disenchanter")
+        print("6. Daily Reward")
+        print("7. Change Name")
+        print("8. Save Game")
+        print("9. Save and Exit")
 
         choice = input("\nChoose an option (or press Enter to fight): ")
 
         if choice in ["1", ""]:
             fight_monster(player)
         elif choice == "2":
-            item_merchant(player)
-        elif choice == "3":
             show_stats(player)
-        elif choice == "4":
+        elif choice == "3":
             show_inventory(player)
+        elif choice == "4":
+            item_merchant(player)
         elif choice == "5":
-            collect_daily_reward(player)
+            disenchanter(player)
         elif choice == "6":
-            change_name(player)
+            collect_daily_reward(player)
         elif choice == "7":
+            change_name(player)
+        elif choice == "8":
             save_utils.save_player(player)
             print("\nGame saved.\n")
-        elif choice == "8":
+        elif choice == "9":
             save_utils.save_player(player)
             print("\nGame saved. Goodbye!")
             break
         else:
             print("Invalid choice. Please try again.")
-
 
 def item_merchant(player):
     """Opens the item merchant."""
@@ -345,8 +355,8 @@ def show_stats(player):
     """Displays the player's stats."""
     print("\n=== Player Stats ===")
     print(f"Name: {player['name']}")
-    print(f"Health: \033[32m{player['health']:,}\033[0m")
     print(f"Level: \033[34m{player['level']:,}\033[0m")
+    print(f"Health: \033[32m{player['health']:,}\033[0m")
     print(f"EXP: \033[35m{player['xp']:,}\033[0m")
     print(f"Gold: \033[33m{player['gold']:,}\033[0m\n")
 
@@ -354,18 +364,43 @@ def show_stats(player):
     print(f"Crit Chance: {crit_chance(player)}%")
     print(f"Crit Bonus: {crit_bonus(player)}%")
     print(f"Armour: {player["equipped_items"]["armour"]["power"]}\n")
-    print(f"Equipped Weapon: {player['equipped_items']['weapon']['name']} "
+    print(f"Equipped Weapon:\033[36m {player['equipped_items']['weapon']['name']}\033[0m "
           f"(Power: {player['equipped_items']['weapon']['power']})")
-    print(f"Equipped Armour: {player['equipped_items']['armour']['name']} "
+    print(f"Equipped Armour:\033[36m {player['equipped_items']['armour']['name']}\033[0m "
           f"(Power: {player['equipped_items']['armour']['power']})")
-    print(f"Equipped Jewellery: {player['equipped_items']['jewellery']['name']} "
+    print(f"Equipped Jewellery:\033[36m {player['equipped_items']['jewellery']['name']}\033[0m "
           f"(Power: {player['equipped_items']['jewellery']['power']})")
     print("--------------------------")
 
+def disenchanter(player):
+    """Opens the disenchanter."""
+    print("\n=== Item Merchant ===")
+    print("\nYou approach the old wizard.")
+    while True:
+        print("\n1. Yes")
+        print("2. No (Return to menu)\n")
+        choice = input("'Yes, yes, hello young one. Shall I disenchant your inventory?'")
+        if choice == "1":
+            total_power = sum(item["power"] for item in player["inventory"])
+            items_count = len(player["inventory"])
+            gold_reward = total_power*20
+            player["gold"] += gold_reward
+            player["inventory"].clear()
+            print("\nThe wizard casts a spell, "
+                  "and your items have been transmuted into a pile of gold coins.")
+            print(f"\nYou received \033[33m{gold_reward:,}\033[0m gold "
+                  f"for \033[36m{items_count:,}\033[0m disenchanted items!")
+            print(f"\nYou now have \033[33m{player['gold']:,}\033[0m gold.")
+            print("\nReturning to menu.")
+            return
+        if choice == "2":
+            return
+        print("\nInvalid choice. Please try again.")
+
 def collect_daily_reward(player):
     """Grants a daily reward if not already collected today."""
+    print("\n=== Daily Reward ===")
     today = date.today().isoformat()
-
     if player.get("last_daily") != today:
         daily_gold = 1000
         player["gold"] += daily_gold
@@ -376,6 +411,7 @@ def collect_daily_reward(player):
 
 def change_name(player):
     """Prompts player input to change player name."""
+    print("\n=== Change Name ===")
     while True:
         print("\n1. Yes")
         print("2. No (Return to menu)\n")
@@ -388,7 +424,7 @@ def change_name(player):
             break
         if choice == "2":
             break
-        print("Invalid choice. Please try again.\n")
+        print("Invalid choice. Please try again.")
 
 # =============================
 #        ENTRY POINT

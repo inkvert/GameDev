@@ -1,370 +1,74 @@
 {
     "name": "Ink",
-    "level": 12,
-    "xp": 1721,
-    "gold": 55952,
-    "health": 210,
-    "max_health": 210,
-    "base_damage": 21,
+    "level": 6,
+    "xp": 676,
+    "gold": 6855,
+    "health": 150,
+    "max_health": 150,
+    "base_damage": 15,
     "base_armour": 0,
     "base_crit_chance": 5,
     "base_crit_bonus": 50,
-    "regen": 190,
+    "regen": 130,
     "equipped_items": {
         "weapon": {
-            "name": "Trusty Bronze Katana of the Cat",
-            "power": 21
+            "name": "Fortunate Copper Mace of the Dog",
+            "power": 15
         },
         "armour": {
-            "name": "Trusty Bronze Hauberk of the Rabbit",
-            "power": 17
+            "name": "Trusty Copper Tunic of the Mouse",
+            "power": 11
         },
         "jewellery": {
-            "name": "Uncanny Steel Bracelet of the Mouse",
-            "power": 21
+            "name": "Fortunate Copper Bangle of the Mouse",
+            "power": 13
         }
     },
     "inventory": [
         {
+            "name": "Lucky Iron Mace of the Mouse",
+            "type": "Weapon",
+            "power": 13
+        },
+        {
+            "name": "Trusty Steel Garb of the Mouse",
+            "type": "Armour",
+            "power": 14
+        },
+        {
+            "name": "Trusty Copper Bracelet of the Mouse",
+            "type": "Jewellery",
+            "power": 6
+        },
+        {
+            "name": "Fortunate Iron Axe of the Rabbit",
+            "type": "Weapon",
+            "power": 18
+        },
+        {
+            "name": "Trusty Steel Sword of the Mouse",
+            "type": "Weapon",
+            "power": 11
+        },
+        {
+            "name": "Trusty Copper Sword of the Mouse",
+            "type": "Weapon",
+            "power": 13
+        },
+        {
+            "name": "Fortunate Bronze Garb of the Dog",
+            "type": "Armour",
+            "power": 11
+        },
+        {
+            "name": "Trusty Steel Bracelet of the Mouse",
+            "type": "Jewellery",
+            "power": 16
+        },
+        {
             "name": "Trusty Bronze Bracelet of the Mouse",
             "type": "Jewellery",
-            "power": 12
-        },
-        {
-            "name": "Lucky Bronze Cuirass of the Mouse",
-            "type": "Armour",
-            "power": 10
-        },
-        {
-            "name": "Trusty Bronze Sword of the Mouse",
-            "type": "Weapon",
             "power": 7
-        },
-        {
-            "name": "Fortunate Bronze Garb of the Mouse",
-            "type": "Armour",
-            "power": 11
-        },
-        {
-            "name": "Trusty Copper Sword of the Mouse",
-            "type": "Weapon",
-            "power": 13
-        },
-        {
-            "name": "Fortunate Bronze Bangle of the Mouse",
-            "type": "Jewellery",
-            "power": 10
-        },
-        {
-            "name": "Fortunate Bronze Sword of the Mouse",
-            "type": "Weapon",
-            "power": 11
-        },
-        {
-            "name": "Lucky Copper Amulet of the Cat",
-            "type": "Jewellery",
-            "power": 18
-        },
-        {
-            "name": "Trusty Bronze Bracelet of the Cat",
-            "type": "Jewellery",
-            "power": 17
-        },
-        {
-            "name": "Trusty Iron Mace of the Dog",
-            "type": "Weapon",
-            "power": 19
-        },
-        {
-            "name": "Lucky Copper Ring of the Rabbit",
-            "type": "Jewellery",
-            "power": 17
-        },
-        {
-            "name": "Trusty Bronze Garb of the Rabbit",
-            "type": "Armour",
-            "power": 15
-        },
-        {
-            "name": "Fortunate Copper Earring of the Dog",
-            "type": "Jewellery",
-            "power": 18
-        },
-        {
-            "name": "Trusty Copper Axe of the Rabbit",
-            "type": "Weapon",
-            "power": 7
-        },
-        {
-            "name": "Trusty Iron Sword of the Cat",
-            "type": "Weapon",
-            "power": 17
-        },
-        {
-            "name": "Fortunate Copper Tunic of the Mouse",
-            "type": "Armour",
-            "power": 13
-        },
-        {
-            "name": "Fortunate Copper Sword of the Mouse",
-            "type": "Weapon",
-            "power": 7
-        },
-        {
-            "name": "Trusty Copper Garb of the Rabbit",
-            "type": "Armour",
-            "power": 13
-        },
-        {
-            "name": "Trusty Bronze Garb of the Mouse",
-            "type": "Armour",
-            "power": 15
-        },
-        {
-            "name": "Fortunate Copper Garb of the Dog",
-            "type": "Armour",
-            "power": 13
-        },
-        {
-            "name": "Fortunate Copper Garb of the Mouse",
-            "type": "Armour",
-            "power": 11
-        },
-        {
-            "name": "Trusty Copper Axe of the Dog",
-            "type": "Weapon",
-            "power": 10
-        },
-        {
-            "name": "Fortunate Steel Bangle of the Cat",
-            "type": "Jewellery",
-            "power": 18
-        },
-        {
-            "name": "Uncanny Copper Garb of the Mouse",
-            "type": "Armour",
-            "power": 10
-        },
-        {
-            "name": "Trusty Copper Garb of the Mouse",
-            "type": "Armour",
-            "power": 7
-        },
-        {
-            "name": "Lucky Steel Sword of the Dog",
-            "type": "Weapon",
-            "power": 15
-        },
-        {
-            "name": "Lucky Copper Garb of the Mouse",
-            "type": "Armour",
-            "power": 15
-        },
-        {
-            "name": "Lucky Steel Garb of the Mouse",
-            "type": "Armour",
-            "power": 14
-        },
-        {
-            "name": "Fortunate Copper Garb of the Rabbit",
-            "type": "Armour",
-            "power": 15
-        },
-        {
-            "name": "Fortunate Copper Sword of the Dog",
-            "type": "Weapon",
-            "power": 12
-        },
-        {
-            "name": "Trusty Copper Garb of the Mouse",
-            "type": "Armour",
-            "power": 6
-        },
-        {
-            "name": "Fortunate Copper Bangle of the Dog",
-            "type": "Jewellery",
-            "power": 16
-        },
-        {
-            "name": "Lucky Iron Sword of the Dog",
-            "type": "Weapon",
-            "power": 17
-        },
-        {
-            "name": "Trusty Bronze Bracelet of the Dog",
-            "type": "Jewellery",
-            "power": 17
-        },
-        {
-            "name": "Trusty Steel Ring of the Mouse",
-            "type": "Jewellery",
-            "power": 16
-        },
-        {
-            "name": "Fortunate Bronze Sword of the Dog",
-            "type": "Weapon",
-            "power": 16
-        },
-        {
-            "name": "Lucky Steel Ring of the Mouse",
-            "type": "Jewellery",
-            "power": 13
-        },
-        {
-            "name": "Fortunate Iron Cuirass of the Rabbit",
-            "type": "Armour",
-            "power": 18
-        },
-        {
-            "name": "Trusty Steel Garb of the Dog",
-            "type": "Armour",
-            "power": 10
-        },
-        {
-            "name": "Lucky Steel Sword of the Rabbit",
-            "type": "Weapon",
-            "power": 19
-        },
-        {
-            "name": "Trusty Bronze Tunic of the Rabbit",
-            "type": "Armour",
-            "power": 17
-        },
-        {
-            "name": "Fortunate Bronze Bangle of the Mouse",
-            "type": "Jewellery",
-            "power": 11
-        },
-        {
-            "name": "Trusty Bronze Garb of the Mouse",
-            "type": "Armour",
-            "power": 11
-        },
-        {
-            "name": "Trusty Copper Mace of the Rabbit",
-            "type": "Weapon",
-            "power": 16
-        },
-        {
-            "name": "Weighted Bronze Tunic of the Rabbit",
-            "type": "Armour",
-            "power": 16
-        },
-        {
-            "name": "Trusty Iron Katana of the Mouse",
-            "type": "Weapon",
-            "power": 13
-        },
-        {
-            "name": "Lucky Iron Brooch of the Rabbit",
-            "type": "Jewellery",
-            "power": 36
-        },
-        {
-            "name": "Trusty Copper Mace of the Mouse",
-            "type": "Weapon",
-            "power": 16
-        },
-        {
-            "name": "Trusty Copper Sword of the Mouse",
-            "type": "Weapon",
-            "power": 14
-        },
-        {
-            "name": "Trusty Copper Sword of the Rabbit",
-            "type": "Weapon",
-            "power": 9
-        },
-        {
-            "name": "Fortunate Copper Bangle of the Mouse",
-            "type": "Jewellery",
-            "power": 6
-        },
-        {
-            "name": "Trusty Copper Axe of the Rabbit",
-            "type": "Weapon",
-            "power": 10
-        },
-        {
-            "name": "Trusty Copper Tunic of the Rabbit",
-            "type": "Armour",
-            "power": 10
-        },
-        {
-            "name": "Lucky Iron Garb of the Rabbit",
-            "type": "Armour",
-            "power": 14
-        },
-        {
-            "name": "Trusty Bronze Bangle of the Rabbit",
-            "type": "Jewellery",
-            "power": 11
-        },
-        {
-            "name": "Trusty Copper Bangle of the Rabbit",
-            "type": "Jewellery",
-            "power": 11
-        },
-        {
-            "name": "Fortunate Copper Bangle of the Rabbit",
-            "type": "Jewellery",
-            "power": 9
-        },
-        {
-            "name": "Trusty Copper Axe of the Mouse",
-            "type": "Weapon",
-            "power": 11
-        },
-        {
-            "name": "Fortunate Copper Bangle of the Mouse",
-            "type": "Jewellery",
-            "power": 9
-        },
-        {
-            "name": "Trusty Copper Mace of the Rabbit",
-            "type": "Weapon",
-            "power": 8
-        },
-        {
-            "name": "Trusty Bronze Earring of the Rabbit",
-            "type": "Jewellery",
-            "power": 10
-        },
-        {
-            "name": "Trusty Copper Axe of the Rabbit",
-            "type": "Weapon",
-            "power": 12
-        },
-        {
-            "name": "Trusty Copper Tunic of the Mouse",
-            "type": "Armour",
-            "power": 15
-        },
-        {
-            "name": "Fortunate Iron Sword of the Dog",
-            "type": "Weapon",
-            "power": 19
-        },
-        {
-            "name": "Fortunate Copper Axe of the Mouse",
-            "type": "Weapon",
-            "power": 12
-        },
-        {
-            "name": "Fortunate Bronze Bangle of the Dog",
-            "type": "Jewellery",
-            "power": 14
-        },
-        {
-            "name": "Uncanny Copper Bangle of the Rabbit",
-            "type": "Jewellery",
-            "power": 18
-        },
-        {
-            "name": "Lucky Iron Bracelet of the Mouse",
-            "type": "Jewellery",
-            "power": 11
         }
-    ],
-    "last_daily": "2025-02-07"
+    ]
 }

@@ -1,5 +1,5 @@
 """Program version and tagline"""
-VERSION = "V1.4"
+VERSION = "V1.5"
 
 SAVE_FILE = "game_state.json"
 
