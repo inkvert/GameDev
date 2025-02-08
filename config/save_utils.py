@@ -1,14 +1,14 @@
-from config.game_constants import SAVE_FILE
+"""Save utility file."""
+
 import os
 import json
-import random
-
+from config.game_constants import SAVE_FILE
 
 def load_player():
     """Loads player data from a save file or initializes default stats."""
     if os.path.exists(SAVE_FILE):
         try:
-            with open(SAVE_FILE, "r") as file:
+            with open(SAVE_FILE, 'r') as file:
                 return json.load(file)
         except json.JSONDecodeError:
             print("Save file is corrupted. Resetting player data.")
@@ -25,6 +25,8 @@ def load_player():
         "base_crit_chance": 5,
         "base_crit_bonus": 50,
         "regen": 80,
+        "magic_find": 0,
+        "gold_find": 0,
         "equipped_items": {
             "weapon": {"name": "None", "power": 0},
             "armour": {"name": "None", "power": 0},
